@@ -263,36 +263,16 @@ void setup() {
   tl(2);
   delay(300);
   lineuntil();
-  db(10);
+  db(6);
 
   //visszamenetel
   armUp();
-  db(22);
-  tl(0.9);
-  df(55);
+  db(20);
   tr(0.9);
-  tl(0.2);
-  df(4);
-  tr(0.2);
-  df(7);
 
-  //osszeszedes
-  armDown();
-  tr(0.05);
+  // sarga
+  df(10);
 
-  //tolas
-  df(84);
-  db(5);
-
-  //helyere
-  tl(0.1);
-  db(10);
-  tr(0.1);
-  df(15);
-  line(2);
-  lineuntil();
-  tl(0.3);
-  df(5);
 
 
 
