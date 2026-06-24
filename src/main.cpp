@@ -201,68 +201,68 @@ void setup() {
   while (!MiniR4.BTN_UP.getState()) delay(10);
   delay(300);
 
-  // // Exit blue square
-  // df(10);
+  // Exit blue square
+  df(10);
 
-  // // Slight left nudge toward line
-  // tl(0.3);
-  // delay(300);
+  // Slight left nudge toward line
+  tl(0.3);
+  delay(300);
 
-  // // Follow line until 4-way crossing
-  // line(5);
-  // lineuntil();
+  // Follow line until 4-way crossing
+  line(5);
+  lineuntil();
 
-  // // Position for mission
-  // df(10);
-  // tr90();
-  // db(3.5);
+  // Position for mission
+  df(10);
+  tr90();
+  db(3.5);
 
-  // // Lower cage to capture object
-  // armDown();
+  // Lower cage to capture object
+  armDown();
 
-  // // Travel w Object
-  // tl(0.9);
-  // db(10);//15
-  // tr(0.1);
-  // df(5);
-  // line(4);
-  // lineuntil();
-  // tl(1.30);
+  // Travel w Object
+  tl(0.9);
+  db(10);//15
+  tr(0.1);
+  df(5);
+  line(4);
+  lineuntil();
+  tl(1.30);
 
-  // tr(0.15);
-  // db(3);
-  // armUp();
-  // tr(0.5);
-  // df(4);
-  // line(2);
-  // lineuntil();
-
-
-  // df(10);
-  // tr(0.9);
-  // db(10);
-  // line(2);
-  // lineuntil();
-  // db(3);
-  // armDown();
-
-  // //lobalozas
-
-  // tr(0.1);
-  // armForceDown();
-  // tl(0.2);
-  // armForceDown();
-  // tr(0.2);
-  // armForceDown();
-  // tl(0.1);
-  // armForceDown();
-  // df(2);
+  tr(0.15);
+  db(3);
+  armUp();
+  tr(0.5);
+  df(4);
+  line(2);
+  lineuntil();
 
 
-  // db(10);
-  // tl(2);
-  // delay(300);
-  // lineuntil();
+  df(10);
+  tr(0.9);
+  db(10);
+  line(2);
+  lineuntil();
+  db(3);
+  armDown();
+
+  //lobalozas
+
+  tr(0.1);
+  armForceDown();
+  tl(0.2);
+  armForceDown();
+  tr(0.2);
+  armForceDown();
+  tl(0.1);
+  armForceDown();
+  df(2);
+
+
+  db(10);
+  tl(2);
+  delay(300);
+  lineuntil();
   db(6);
 
   //visszamenetel
