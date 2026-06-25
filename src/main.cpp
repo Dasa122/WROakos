@@ -272,7 +272,7 @@ void setup() {
 
   // sarga
   df(25);
-  tr(0.9);
+  tr(1);
   db(10);
   delay(300);
   line(0.5);
@@ -291,6 +291,50 @@ void setup() {
   tl(0.1);
   armForceDown();
   df(3);
+
+  tr(2);
+  db(20);
+  line(2);
+
+  df(16);
+  tl(1);
+  lineuntil();
+  line(4);
+  tr(1);
+  lineuntil(); 
+
+  df(10);
+  tr(0.9);
+  lineuntil();
+
+  //sargatol vissza
+
+  db(6);
+  armUp();
+
+  db(15);
+  lineuntil();
+  df(10);
+  tr(0.9);
+  lineuntil();
+
+  tr(0.9);
+  df(15);
+  tr90();
+  df(2);
+  armDown();
+  df(5);
+  armDown();
+  df(20);
+  tr(0.3);
+  df(15);
+  line(2);
+  lineuntil();
+
+
+
+
+
 
 
 
