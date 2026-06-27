@@ -6,32 +6,25 @@ const float TURN_90_DEG = 230;
 const int DRIVE_SPEED = 30;
 const int TURN_SPEED = 30;
 const int LINE_SPEED = 25;
-const float Kp = 15.5; // 15.5
-const float Ki = 0.02f;
-const float Kd = 10.0f;
-const float INTEGRAL_LIMIT = 8.0f;
+const float Kp = 17.5; // 15.5
 
-void applyLineControl(bool reverse, int baseSpeed, float &integral, float &previousError) {
+void applyLineControl(bool reverse, int baseSpeed, float &filteredError) {
   float error = MiniR4.I2C0.MXLineTracer.getError();
   bool online = MiniR4.I2C0.MXLineTracer.isOnline();
 
-  integral += error;
-  integral = constrain(integral, -INTEGRAL_LIMIT, INTEGRAL_LIMIT);
+  filteredError = (filteredError * 0.75f) + (error * 0.25f);
 
-  float derivative = error - previousError;
-  previousError = error;
-
-  float correction = (Kp * error) + (Ki * integral) + (Kd * derivative);
-  int speed = online ? baseSpeed : 20;
-  int L = constrain((int)(speed + correction), -100, 100);
-  int R = constrain((int)(speed - correction), -100, 100);
+  float correction = constrain(Kp * filteredError, -18.0f, 18.0f);
+  int speed = online ? baseSpeed : 15;
+  int left = constrain((int)(speed + correction), -100, 100);
+  int right = constrain((int)(speed - correction), -100, 100);
 
   if (reverse) {
-    MiniR4.M1.setSpeed(-L);
-    MiniR4.M2.setSpeed(R);
+    MiniR4.M1.setSpeed(-left);
+    MiniR4.M2.setSpeed(right);
   } else {
-    MiniR4.M1.setSpeed(L);
-    MiniR4.M2.setSpeed(-R);
+    MiniR4.M1.setSpeed(left);
+    MiniR4.M2.setSpeed(-right);
   }
 }
 
@@ -107,8 +100,7 @@ void tl(float fraction) {
 }
 
 void lineuntil() {
-  float integral = 0;
-  float previousError = 0;
+  float filteredError = 0;
   while (true) {
     uint8_t width = MiniR4.I2C0.MXLineTracer.getLineWidth();
 
@@ -119,14 +111,13 @@ void lineuntil() {
       break;
     }
 
-    applyLineControl(false, LINE_SPEED, integral, previousError);
+    applyLineControl(false, LINE_SPEED, filteredError);
     delay(10);
   }
 }
 
 void lineuntilBack() {
-  float integral = 0;
-  float previousError = 0;
+  float filteredError = 0;
   while (true) {
     uint8_t width = MiniR4.I2C0.MXLineTracer.getLineWidth();
 
@@ -137,14 +128,13 @@ void lineuntilBack() {
       break;
     }
 
-    applyLineControl(true, LINE_SPEED, integral, previousError);
+    applyLineControl(true, LINE_SPEED, filteredError);
     delay(10);
   }
 }
 
 void followUntilEnd() {
-  float integral = 0;
-  float previousError = 0;
+  float filteredError = 0;
   while (true) {
     uint8_t width = MiniR4.I2C0.MXLineTracer.getLineWidth();
 
@@ -155,7 +145,7 @@ void followUntilEnd() {
       break;
     }
 
-    applyLineControl(false, LINE_SPEED, integral, previousError);
+    applyLineControl(false, LINE_SPEED, filteredError);
     delay(10);
   }
 }
@@ -163,11 +153,10 @@ void followUntilEnd() {
 void line(float seconds) {
   unsigned long start = millis();
   unsigned long duration = (unsigned long)(seconds * 1000);
-  float integral = 0;
-  float previousError = 0;
+  float filteredError = 0;
   
   while (millis() - start < duration) {
-    applyLineControl(false, LINE_SPEED, integral, previousError);
+    applyLineControl(false, LINE_SPEED, filteredError);
     delay(10);
   }
 
