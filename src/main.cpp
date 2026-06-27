@@ -299,7 +299,7 @@ void setup() {
   df(16);
   tl(1);
   lineuntil();
-  line(4);
+  line(3.9);
   tr(1);
   lineuntil(); 
 
