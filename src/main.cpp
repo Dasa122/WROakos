@@ -253,6 +253,8 @@ void setup() {
   db(3);
   armDown();
 
+  df(1000);
+
   db(37);
   lineuntil();
   df(10);
@@ -260,14 +262,28 @@ void setup() {
 
   line(1.5);
   lineuntil();
-  df(5);
-  tr(0.9);
-  lineuntil();
+  df(7);
+  tr(1);
+  df(7);
   tl(0.5);
-  df(5);
+  df(8);
   armUp();
   tl(0.7);
-  df(15);
+  df(20);
+  db(10);
+  lineuntil();
+  df(10);
+  tr(1);
+  line(1.5);
+  lineuntil();
+  df(10);
+  tl(1);
+  db(5);
+  lineuntil();
+  db(7);
+  armDown();
+  db(10);
+
 
 
 
