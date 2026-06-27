@@ -190,21 +190,15 @@ void armUp() {
 }
 
 void arm2Down() {
-  MiniR4.RC1.setAngle(100);
+  MiniR4.RC2.setAngle(100);
   delay(2400);
-  MiniR4.RC1.setAngle(90);
-}
-
-void arm2ForceDown() {
-  MiniR4.RC1.setAngle(100);
-  delay(500);
-  MiniR4.RC1.setAngle(90);
+  MiniR4.RC2.setAngle(90);
 }
 
 void arm2Up() {
-  MiniR4.RC1.setAngle(80);
+  MiniR4.RC2.setAngle(80);
   delay(2000);
-  MiniR4.RC1.setAngle(90);
+  MiniR4.RC2.setAngle(90);
 }
 
 void setup() {
@@ -259,18 +253,21 @@ void setup() {
   db(3);
   armDown();
 
-  db(40);
+  db(37);
   lineuntil();
+  df(10);
   tr(0.9);
 
-  line(1);
+  line(1.5);
   lineuntil();
   df(5);
   tr(0.9);
   lineuntil();
   tl(0.5);
+  df(5);
   armUp();
-
+  tl(0.7);
+  df(15);
 
 
 
