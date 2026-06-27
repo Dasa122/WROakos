@@ -6,7 +6,7 @@ const float TURN_90_DEG = 230;
 const int DRIVE_SPEED = 30;
 const int TURN_SPEED = 30;
 const int LINE_SPEED = 25;
-const float Kp = 15.5;
+const float Kp = 15.5; // 15.5
 
 void df(float cm) {
   int target = (int)(cm * DEG_PER_CM);
@@ -98,6 +98,29 @@ void lineuntil() {
     int R = constrain((int)(speed - correction), -100, 100);
     MiniR4.M1.setSpeed(L);
     MiniR4.M2.setSpeed(-R);
+    delay(10);
+  }
+}
+
+void lineuntilBack() {
+  while (true) {
+    float error = MiniR4.I2C0.MXLineTracer.getError();
+    bool online = MiniR4.I2C0.MXLineTracer.isOnline();
+    uint8_t width = MiniR4.I2C0.MXLineTracer.getLineWidth();
+
+    if (width == 10) {
+      MiniR4.M1.setSpeed(0);
+      MiniR4.M2.setSpeed(0);
+      delay(150);
+      break;
+    }
+
+    float correction = Kp * error;
+    int speed = online ? LINE_SPEED : 20;
+    int L = constrain((int)(speed + correction), -100, 100);
+    int R = constrain((int)(speed - correction), -100, 100);
+    MiniR4.M1.setSpeed(-L);
+    MiniR4.M2.setSpeed(R);
     delay(10);
   }
 }
@@ -209,7 +232,7 @@ void setup() {
   delay(300);
 
   // Follow line until 4-way crossing
-  line(5);
+  line(4.5);
   lineuntil();
 
   // Position for mission
@@ -243,7 +266,7 @@ void setup() {
   db(10);
   line(2);
   lineuntil();
-  db(3);
+  db(2);
   armDown();
 
   //lobalozas
@@ -292,15 +315,18 @@ void setup() {
   armForceDown();
   df(3);
 
-  tr(2);
-  db(20);
+  tr(1.9);
+  db(17);
   line(2);
 
   df(16);
   tl(1);
   lineuntil();
-  line(3.9);
-  tr(1);
+  line(3.6);
+  tr(0.2);
+  df(2);
+  tr(0.5);
+  line(1);
   lineuntil(); 
 
   df(10);
@@ -312,24 +338,15 @@ void setup() {
   db(6);
   armUp();
 
-  db(15);
+  db(1);
+  tl(0.9);
+  line(4);
   lineuntil();
-  df(10);
-  tr(0.9);
-  lineuntil();
+  db(10);
+  tr(1);
+  line(3);
 
-  tr(0.9);
-  df(15);
-  tr90();
-  df(2);
-  armDown();
-  df(5);
-  armDown();
-  df(20);
-  tr(0.3);
-  df(15);
-  line(2);
-  lineuntil();
+
 
 
 
