@@ -7,6 +7,33 @@ const int DRIVE_SPEED = 30;
 const int TURN_SPEED = 30;
 const int LINE_SPEED = 25;
 const float Kp = 15.5; // 15.5
+const float Ki = 0.02f;
+const float Kd = 10.0f;
+const float INTEGRAL_LIMIT = 8.0f;
+
+void applyLineControl(bool reverse, int baseSpeed, float &integral, float &previousError) {
+  float error = MiniR4.I2C0.MXLineTracer.getError();
+  bool online = MiniR4.I2C0.MXLineTracer.isOnline();
+
+  integral += error;
+  integral = constrain(integral, -INTEGRAL_LIMIT, INTEGRAL_LIMIT);
+
+  float derivative = error - previousError;
+  previousError = error;
+
+  float correction = (Kp * error) + (Ki * integral) + (Kd * derivative);
+  int speed = online ? baseSpeed : 20;
+  int L = constrain((int)(speed + correction), -100, 100);
+  int R = constrain((int)(speed - correction), -100, 100);
+
+  if (reverse) {
+    MiniR4.M1.setSpeed(-L);
+    MiniR4.M2.setSpeed(R);
+  } else {
+    MiniR4.M1.setSpeed(L);
+    MiniR4.M2.setSpeed(-R);
+  }
+}
 
 void df(float cm) {
   int target = (int)(cm * DEG_PER_CM);
@@ -80,9 +107,9 @@ void tl(float fraction) {
 }
 
 void lineuntil() {
+  float integral = 0;
+  float previousError = 0;
   while (true) {
-    float error = MiniR4.I2C0.MXLineTracer.getError();
-    bool online = MiniR4.I2C0.MXLineTracer.isOnline();
     uint8_t width = MiniR4.I2C0.MXLineTracer.getLineWidth();
 
     if (width == 10) {
@@ -92,20 +119,15 @@ void lineuntil() {
       break;
     }
 
-    float correction = Kp * error;
-    int speed = online ? LINE_SPEED : 20;
-    int L = constrain((int)(speed + correction), -100, 100);
-    int R = constrain((int)(speed - correction), -100, 100);
-    MiniR4.M1.setSpeed(L);
-    MiniR4.M2.setSpeed(-R);
+    applyLineControl(false, LINE_SPEED, integral, previousError);
     delay(10);
   }
 }
 
 void lineuntilBack() {
+  float integral = 0;
+  float previousError = 0;
   while (true) {
-    float error = MiniR4.I2C0.MXLineTracer.getError();
-    bool online = MiniR4.I2C0.MXLineTracer.isOnline();
     uint8_t width = MiniR4.I2C0.MXLineTracer.getLineWidth();
 
     if (width == 10) {
@@ -115,20 +137,15 @@ void lineuntilBack() {
       break;
     }
 
-    float correction = Kp * error;
-    int speed = online ? LINE_SPEED : 20;
-    int L = constrain((int)(speed + correction), -100, 100);
-    int R = constrain((int)(speed - correction), -100, 100);
-    MiniR4.M1.setSpeed(-L);
-    MiniR4.M2.setSpeed(R);
+    applyLineControl(true, LINE_SPEED, integral, previousError);
     delay(10);
   }
 }
 
 void followUntilEnd() {
+  float integral = 0;
+  float previousError = 0;
   while (true) {
-    float error = MiniR4.I2C0.MXLineTracer.getError();
-    bool online = MiniR4.I2C0.MXLineTracer.isOnline();
     uint8_t width = MiniR4.I2C0.MXLineTracer.getLineWidth();
 
     if (width == 0) {
@@ -138,12 +155,7 @@ void followUntilEnd() {
       break;
     }
 
-    float correction = Kp * error;
-    int speed = online ? LINE_SPEED : 20;
-    int L = constrain((int)(speed + correction), -100, 100);
-    int R = constrain((int)(speed - correction), -100, 100);
-    MiniR4.M1.setSpeed(L);
-    MiniR4.M2.setSpeed(-R);
+    applyLineControl(false, LINE_SPEED, integral, previousError);
     delay(10);
   }
 }
@@ -151,18 +163,11 @@ void followUntilEnd() {
 void line(float seconds) {
   unsigned long start = millis();
   unsigned long duration = (unsigned long)(seconds * 1000);
+  float integral = 0;
+  float previousError = 0;
   
   while (millis() - start < duration) {
-    float error = MiniR4.I2C0.MXLineTracer.getError();
-    bool online = MiniR4.I2C0.MXLineTracer.isOnline();
-    uint8_t width = MiniR4.I2C0.MXLineTracer.getLineWidth();
-
-    float correction = Kp * error;
-    int speed = online ? LINE_SPEED : 20;
-    int L = constrain((int)(speed + correction), -100, 100);
-    int R = constrain((int)(speed - correction), -100, 100);
-    MiniR4.M1.setSpeed(L);
-    MiniR4.M2.setSpeed(-R);
+    applyLineControl(false, LINE_SPEED, integral, previousError);
     delay(10);
   }
 
@@ -253,8 +258,6 @@ void setup() {
   db(3);
   armDown();
 
-  df(1000);
-
   db(37);
   lineuntil();
   df(10);
@@ -268,21 +271,23 @@ void setup() {
   tl(0.5);
   df(8);
   armUp();
-  tl(0.7);
+  tl(0.5);
   df(20);
-  db(10);
+  db(15);
+  tl(1);
+  line(2.5);
   lineuntil();
-  df(10);
-  tr(1);
-  line(1.5);
-  lineuntil();
+
   df(10);
   tl(1);
   db(5);
   lineuntil();
   db(7);
   armDown();
-  db(10);
+  db(15); 
+  tl(0.9);
+  line(4);
+  lineuntil();
 
 
 
