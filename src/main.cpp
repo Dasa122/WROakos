@@ -189,6 +189,24 @@ void armUp() {
   MiniR4.RC1.setAngle(90);
 }
 
+void arm2Down() {
+  MiniR4.RC1.setAngle(100);
+  delay(2400);
+  MiniR4.RC1.setAngle(90);
+}
+
+void arm2ForceDown() {
+  MiniR4.RC1.setAngle(100);
+  delay(500);
+  MiniR4.RC1.setAngle(90);
+}
+
+void arm2Up() {
+  MiniR4.RC1.setAngle(80);
+  delay(2000);
+  MiniR4.RC1.setAngle(90);
+}
+
 void setup() {
   MiniR4.begin();
   MiniR4.PWR.setBattCell(2);
@@ -229,124 +247,29 @@ void setup() {
 
   // Slight left nudge toward line
   tl(0.3);
-  delay(300);
 
-  // Follow line until 4-way crossing
-  line(4.5);
-  lineuntil();
-
-  // Position for mission
-  df(10);
-  tr90();
-  db(3.5);
-
-  // Lower cage to capture object
-  armDown();
-
-  // Travel w Object
-  tl(0.9);
-  db(10);//15
-  tr(0.1);
-  df(5);
-  line(4);
-  lineuntil();
-  tl(1.30);
-
-  tr(0.15);
-  db(3);
-  armUp();
-  tr(0.5);
-  df(4);
-  line(2);
-  lineuntil();
-
-
-  df(10);
-  tr(0.9);
-  db(10);
-  line(2);
-  lineuntil();
-  db(2);
-  armDown();
-
-  //lobalozas
-
-  tr(0.1);
-  armForceDown();
-  tl(0.2);
-  armForceDown();
-  tr(0.2);
-  armForceDown();
-  tl(0.1);
-  armForceDown();
-  df(2);
-
-
-  db(10);
-  tl(2);
-  delay(300);
-  lineuntil();
-  db(6);
-
-  //visszamenetel
-  armUp();
-  db(25);
-  tr(0.9);
-
-  // sarga
-  df(25);
-  tr(1);
-  db(10);
-  delay(300);
-  line(0.5);
-  lineuntil();
-  db(2);
- 
-  //lobalozas
-
-  armDown();
-  tr(0.1);
-  armForceDown();
-  tl(0.2);
-  armForceDown();
-  tr(0.2);
-  armForceDown();
-  tl(0.1);
-  armForceDown();
-  df(3);
-
-  tr(1.9);
-  db(17);
-  line(2);
-
-  df(16);
+  line(2.5);
+  db(5);
   tl(1);
+  
+  line(3.25);
+  tr(1);
+    
   lineuntil();
-  line(3.6);
-  tr(0.2);
-  df(2);
-  tr(0.5);
-  line(1);
-  lineuntil(); 
+  db(3);
+  armDown();
 
-  df(10);
+  db(40);
+  lineuntil();
+  tr(0.9);
+
+  line(1);
+  lineuntil();
+  df(5);
   tr(0.9);
   lineuntil();
-
-  //sargatol vissza
-
-  db(6);
+  tl(0.5);
   armUp();
-
-  db(1);
-  tl(0.9);
-  line(4);
-  lineuntil();
-  db(10);
-  tr(1);
-  line(3);
-
-
 
 
 
